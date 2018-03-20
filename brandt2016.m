@@ -52,7 +52,3 @@ set (gca, 'yscale','log') %scale the y axis
 title('Brandt Compilation Device Level Emissions (Log/log scale)');
 xlabel('Methane Emissions rate (kgCH4/day)')
 ylabel('Frequency')
-%%
-%for elem = 1:length(unique(source))
-        %if elem == uniq
-            
