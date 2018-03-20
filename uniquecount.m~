@@ -1,5 +1,5 @@
 % uniquecount function returns 
-%test creating branch in github
+%test creating branch in g
 function uniquecount(matrix)
 %create vector of unique values
 uniq = unique(matrix);
