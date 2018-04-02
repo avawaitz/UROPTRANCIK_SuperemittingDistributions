@@ -3,7 +3,7 @@
 % columns also)
 %brandt16comp = xlsread('/Users/avawaitz/Dropbox/AvaProject/Data/es6b04303_si_002.xlsx','Compilation for export','F:G');
 %remember you need to include the whole route to the file
-%% Extracting columns
+%% Extracting columnsç
 % columns:
     % 1: study (ex: Allen2013)
 [num1,study,raw1]= xlsread('/Users/avawaitz/Dropbox/AvaProject/Data/es6b04303_si_002.xlsx','Compilation for export','A2:A26656');
@@ -29,8 +29,7 @@ max_b16 = max(kgperday);
 %%% NEED TO GO THROUGH AND DIVIDE BY DEVICE? --> function to return number
 %%% in each
 
-
-upperlim = 25000; %set upper limit of histogram
+upperlim = max_b16; %set upper limit of histogram
 h_b16_lin = histogram(kgperday,100,'BinLimits',[min_b16,upperlim]); %make linear histogram with limits
 title('Brandt Compilation Device Level Emissions (Linear scale)');
 xlabel('Methane Emissions rate (kgCH4/day)')
@@ -52,3 +51,63 @@ set (gca, 'yscale','log') %scale the y axis
 title('Brandt Compilation Device Level Emissions (Log/log scale)');
 xlabel('Methane Emissions rate (kgCH4/day)')
 ylabel('Frequency')
+
+%% Sorts the different source categories to see which have
+%observations n > ##
+uniqarr = uniquecount(source);
+uniqarrN = uniqarr; %will be changed to only include source tags with n> # observations
+for x = length(uniqarrN):-1:1 % bc columns being deleted as loop runs need to go from end to beginning so indexes not changed
+    if uniqarrN{2,x} < 30 %##
+        uniqarrN(:,x) = [];
+    end
+end
+%this is an array of the unique sources and their frequency, if their
+%frequency is greater than ##
+disp(uniqarrN)
+
+
+%% Bar graphs for individual sources
+%Source type being examined:
+sourcetag = 'CV';  
+idx = find(strcmp([source(:)],sourcetag)); %finds indices of elements with that source string in source arr
+source_val = kgperday(idx); %extracts the emissions of those observations (at those indices)
+idxuniqarr = find(ismember(uniqarr(1,:),sourcetag)); % index of that source in source array
+
+% Linear scale plot
+upperlim = max(source_val);%set upper limit of histogram
+figure(1)
+histogram(source_val, 100,'BinLimits',[min(source_val),max(source_val)]); %make linear histogram with limits
+title(['Brandt ',sourcetag,' Device Emissions (Linear scale)']);
+xlabel('Methane Emissions rate (kgCH4/day)')
+ylabel('Frequency')
+label = [num2str(uniqarr{2,idxuniqarr}),' observations']; % prints number of observations for that source tag in text box
+dim1 = [.75 .6 .3 .3]; %controls location of txtbox on figure
+annotation('textbox',dim1,'String',label,'FitBoxToText','on'); %creates txtbox on figure
+
+% Log/lin scale plot
+upperlim2 = ceil(log10(max(source_val)));
+lowerlim2 = ceil(log10(min(source_val)));
+x = logspace(-2,upperlim2,50); %make bin edges
+figure(2)
+histogram(source_val,x); %make histogram
+set(gca,'xscale','log') % scale the x axis
+title(['Brandt ',sourcetag,' Device Emissions (Log/lin scale)']);
+xlabel('Methane Emissions rate (kgCH4/day)')
+ylabel('Frequency')
+dim2 = [.2 .6 .3 .3]; %controls location of txtbox on figure
+annotation('textbox',dim2,'String',label,'FitBoxToText','on'); %creates txtbox on figure
+
+% Log/log scale plot
+upperlim3 = ceil(log10(max(source_val)));
+lowerlim3 = floor(log10(min(source_val)));
+x = logspace(-2,upperlim3,50); %make bin edges
+figure(3)
+histogram(source_val,x) %make histogram
+set(gca,'xscale','log') % scale the x axis
+set(gca, 'yscale','log')%scale the y axis
+ylim([0.01 6]);
+title(['Brandt ',sourcetag,' Device Emissions (Log/log scale)']);
+xlabel('Methane Emissions rate (kgCH4/day)')
+ylabel('Frequency')
+dim3 = [.2 .6 .3 .3]; %controls location of txtbox on figure
+annotation('textbox',dim3,'String',label,'FitBoxToText','on'); %creates txtbox on figure
