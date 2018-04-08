@@ -27,16 +27,17 @@ if xuplim == 'none'
    %vector as an entry, maybe go back and change this earlier
 end
 if yuplim == 'none'
-   yuplim = 6; %WHAT SHOULD YLIM BE?
+   yuplim = Inf; %WHAT SHOULD YLIM BE?
 end
 
 if strcmpi('lin',scale) || strcmpi('all',scale)%Plots Linear % Have to use strcmpi for string logic
-figure
-histogram(sourcevalues{:},100,'BinLimits',[min(sourcevalues{:}),xuplim]); %make linear histogram with limits
-title(['Brandt ',sourcetag,' Device Emissions (Linear scale)']);
-xlabel('Methane Emissions rate (kgCH4/day)')
-ylabel('Frequency')
-annotation('textbox',dim,'String',label,'FitBoxToText','on'); %creates txtbox on figure
+    figure
+    histogram(sourcevalues{:},100,'BinLimits',[min(sourcevalues{:}),xuplim]); %make linear histogram with limits
+    title(['Brandt ',sourcetag,' Device Emissions (Linear scale)']);
+    xlabel('Methane Emissions rate (kgCH4/day)')
+    ylabel('Frequency')
+    annotation('textbox',dim,'String',label,'FitBoxToText','on'); %creates txtbox on figure
+    saveas(gcf,[sourcetag,' Lin'],'png');
 end
 
 if strcmpi('loglin',scale) || strcmpi('all',scale) %Plots Log-Linear
@@ -51,6 +52,7 @@ if strcmpi('loglin',scale) || strcmpi('all',scale) %Plots Log-Linear
     xlabel('Methane Emissions rate (kgCH4/day)')
     ylabel('Frequency')
     annotation('textbox',dim,'String',label,'FitBoxToText','on'); %plots txtbox on graph
+    saveas(gcf,[sourcetag,' Loglin'],'png');
 end
 
 if strcmpi('loglog',scale) || strcmpi('all',scale) %Plots Log-Log
@@ -66,6 +68,7 @@ if strcmpi('loglog',scale) || strcmpi('all',scale) %Plots Log-Log
     xlabel('Methane Emissions rate (kgCH4/day)')
     ylabel('Frequency')
     annotation('textbox',dim,'String',label,'FitBoxToText','on'); %creates txtbox on figure
+    saveas(gcf,[sourcetag,' Loglog'],'png');
 end
 end
 
