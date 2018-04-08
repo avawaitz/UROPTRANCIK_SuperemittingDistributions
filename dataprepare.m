@@ -15,11 +15,15 @@ function sourceemissions = dataprepare
 kgperday = num2cell(kgperday); %makes double array into cell array s.t. can concatenate
 datamatrix = [source kgperday]; %concatenates into 2x26655 cell array (source, kgperday)
 
-%delete rows with NA and NaN: NOT WORKING with NaN
+%delete rows with NA and NaN:I think fixed, test again...
 deleteidx = find(strcmp(datamatrix(:,1),'NA'));
 datamatrix(deleteidx,:)=[];
-deleteidx1 = find(strcmp(datamatrix(:,2),'NaN'));
-datamatrix(deleteidx1,:)=[];!
+for k = length(datamatrix):-1:1 % bc columns being deleted as loop runs need to go from end to beginning so indexes not changed
+    nantest = isnan(datamatrix{k,2});
+        if sum(nantest) == 1
+           datamatrix(k,:) = [];
+        end
+end
 
 %find frequencies of source tags 
 uniqarr = uniquecount(datamatrix(:,1)); %cell array w/ unique source tags and corresponding frequencies
@@ -27,7 +31,7 @@ uniqarr = uniquecount(datamatrix(:,1)); %cell array w/ unique source tags and co
 %Will be changed to only include source tags with n> # observations
 uniqarrN = uniqarr; 
 for x = length(uniqarrN):-1:1 % bc columns being deleted as loop runs need to go from end to beginning so indexes not changed
-    if uniqarrN{2,x} < 0 %##
+    if uniqarrN{2,x} < 0 % ##
         uniqarrN(:,x) = [];
     end
 end %this is an array of the unique sources and their frequency, if their
