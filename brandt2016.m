@@ -24,10 +24,7 @@
 %% Descriptive Stats
 min_b16 = min(kgperday);
 max_b16 = max(kgperday);
-%% Linear scale plt
-
-%%% NEED TO GO THROUGH AND DIVIDE BY DEVICE? --> function to return number
-%%% in each
+%% Linear scale plot
 
 upperlim = max_b16; %set upper limit of histogram
 h_b16_lin = histogram(kgperday,100,'BinLimits',[min_b16,upperlim]); %make linear histogram with limits
@@ -39,7 +36,7 @@ upperlim1 = ceil(log10(upperlim));
 x = logspace(0,upperlim1,50); %make bin edges
 hloglin = histogram(kgperday,x); %make histogram
 set(gca,'xscale','log') % scale the x axis
-title('Brandt Compilation Device Level Emissions (Log/linkk scale)');
+title('Brandt Compilation Device Level Emissions (Log/lin scale)');
 xlabel('Methane Emissions rate (kgCH4/day)')
 ylabel('Frequency')
 %% Log/log scale plot
@@ -67,6 +64,10 @@ disp(uniqarrN)
 
 
 %% Bar graphs for individual sources
+%First make vectors of all the source tags to be plotted
+%inputs into plotting function: vector of values (source_val), source tag,
+%upperlimit for x and y, type of x and y axes scale
+
 %Source type being examined:
 sourcetag = 'CV';  
 idx = find(strcmp([source(:)],sourcetag)); %finds indices of elements with that source string in source arr
