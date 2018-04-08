@@ -1,3 +1,6 @@
 #ignore figures I generate and download from matlab
 *.jpg
 *.fig
+*.mat
+*.png
+*.pdf
