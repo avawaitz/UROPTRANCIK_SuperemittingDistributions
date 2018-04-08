@@ -1,9 +1,11 @@
-%should input be the whole data matrix or the two vectors? and should this
-%function pull out the two vectors or will another function used upstream
-%do that?
 
-%As of now: takes sourcetag vector and emissions vector as emissions.
-%Returns 
+% Questions: 
+%- should input be the whole data matrix or the two vectors? 
+%- should this function pull out the two vectors or will another function used upstream
+%   do that?
+%- Should I not include the loading of the data from excel in this function?
+%- Deleting NaN not working
+
 
 function sourceemissions = dataprepare
 % Downloads source tags and emissions from excel file
@@ -13,12 +15,11 @@ function sourceemissions = dataprepare
 kgperday = num2cell(kgperday); %makes double array into cell array s.t. can concatenate
 datamatrix = [source kgperday]; %concatenates into 2x26655 cell array (source, kgperday)
 
-%delete rows with NA: NOT WORKING
+%delete rows with NA and NaN: NOT WORKING with NaN
 deleteidx = find(strcmp(datamatrix(:,1),'NA'));
 datamatrix(deleteidx,:)=[];
 deleteidx1 = find(strcmp(datamatrix(:,2),'NaN'));
-datamatrix(deleteidx1,:)=[];
-%%%%Issue: CANNOT FIND NaN!!!!
+datamatrix(deleteidx1,:)=[];!
 
 %find frequencies of source tags 
 uniqarr = uniquecount(datamatrix(:,1)); %cell array w/ unique source tags and corresponding frequencies
@@ -45,5 +46,4 @@ for y = 1:length(uniqarrN)
     sourceemissions{y,1}= sourcetag;
     sourceemissions{y,2}= emissionsvec; 
 end    
-% I think not nec: idxuniqarr = find(ismember(uniqarr(1,:),sourcetag)); % index of that source in source array
 end
