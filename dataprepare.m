@@ -49,5 +49,12 @@ for y = 1:length(uniqarrN)
     emissionsvec = emissionsvec.'; %transposes so that it is a row vector
     sourceemissions{y,1}= sourcetag;
     sourceemissions{y,2}= emissionsvec; 
-end    
+end  
+% finding and replacinng / with - in sourcetags bc it messes up saveas
+for z = 1:length(sourceemissions)
+    string = sourceemissions{z,1};
+    if contains(string,'/') == 1
+        newStr = strrep(string,'/','-');
+        sourceemissions{z,1} = newStr;
+    end
 end

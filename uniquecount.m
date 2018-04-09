@@ -11,5 +11,8 @@ for x = 1:length(uniq) %for each unique value
     uc_cellarr{1,x}=string; %string goes into row 1, x column
     uc_cellarr{2,x} = freq_string; %frequency goes into row 2, x column
 end
+end
+
+
 
 
