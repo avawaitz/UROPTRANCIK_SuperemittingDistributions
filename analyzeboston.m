@@ -1,5 +1,5 @@
 %% Importing Site EUI data into array
-ab_siteeui = xlsread('/Users/avawaitz/Dropbox/Analyze Boston-unmodified.xlsx','Sheet1','H2:H1801');
+ab_siteeui = xlsread('/Users/avawaitz/Dropbox/AvaProject/Data/AnalyzeBoston-unmodified.xlsx','rawData','H2:H1801');
 
 %% Descriptive Statistics
 min_ab = min(ab_siteeui);

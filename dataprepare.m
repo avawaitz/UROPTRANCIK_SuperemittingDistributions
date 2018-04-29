@@ -4,26 +4,9 @@
 %- should this function pull out the two vectors or will another function used upstream
 %   do that?
 %- Should I not include the loading of the data from excel in this function?
-%- Deleting NaN not working
 
 
-function sourceemissions = dataprepare
-% Downloads source tags and emissions from excel file
-[ndata1,source,alldata]= xlsread('/Users/avawaitz/Dropbox/AvaProject/Data/es6b04303_si_002.xlsx','Compilation for export','D2:D26656');
-[kgperday,text2,alldata]= xlsread('/Users/avawaitz/Dropbox/AvaProject/Data/es6b04303_si_002.xlsx','Compilation for export','G2:G26656');
-
-kgperday = num2cell(kgperday); %makes double array into cell array s.t. can concatenate
-datamatrix = [source kgperday]; %concatenates into 2x26655 cell array (source, kgperday)
-
-%delete rows with NA and NaN:I think fixed, test again...
-deleteidx = find(strcmp(datamatrix(:,1),'NA'));
-datamatrix(deleteidx,:)=[];
-for k = length(datamatrix):-1:1 % bc columns being deleted as loop runs need to go from end to beginning so indexes not changed
-    nantest = isnan(datamatrix{k,2});
-        if sum(nantest) == 1
-           datamatrix(k,:) = [];
-        end
-end
+function sourceemissions = dataprepare(datamatrix)
 
 %find frequencies of source tags 
 uniqarr = uniquecount(datamatrix(:,1)); %cell array w/ unique source tags and corresponding frequencies
@@ -44,7 +27,7 @@ sourceemissions = cell(length(uniqarrN),2,1);
 for y = 1:length(uniqarrN)
     sourcetag = uniqarrN{1,y};  
     idx = find(strcmp(datamatrix(:,1),sourcetag)); %finds indices of elements with that source string in source arr
-    emissionsvec = datamatrix(idx,2);%extracts the emissions of those observations (at those indices)
+    emissionsvec = datamatrix(idx,4);%extracts the emissions of those observations (at those indices)
     emissionsvec = cell2mat(emissionsvec); %makes cell array into vector
     emissionsvec = emissionsvec.'; %transposes so that it is a row vector
     sourceemissions{y,1}= sourcetag;
@@ -57,4 +40,5 @@ for z = 1:length(sourceemissions)
         newStr = strrep(string,'/','-');
         sourceemissions{z,1} = newStr;
     end
+save('brandtsourceemissions');
 end
