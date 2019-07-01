@@ -3,7 +3,7 @@ datamtrix = downloaddata;
 devicearr = devicecat;
 devicearr = cell2mat(devicearr);
 %% Run this section separately to test
-category =  'Tanks-and-hatches-Unspecified';   % enter string name of category to test with (same as graph
+category =  'Compressor-seals-All';   % enter string name of category to test with (same as graph
 
 % names in devicecatgraphs folder. NOTE: these graphs will look different
 % because pdf was not used to generate those histographs
@@ -33,18 +33,6 @@ sigma = sqrt(log(v/(m^2)+1));%
 %r = lognrnd(mu,sigma,1,10000); %should be normallydistributed when log
 r = catvalues;
 
-logr = log(r);
-maxlogr = max(logr);
-maxval = max(r);
-upperlim = ceil(log10(maxval));
-xlin = linspace(0,maxlogr,50);
-xlog = logspace(-3,upperlim,50);
-
-% log of data on linear scale
-figure
-histogram(logr,xlin,'Normalization','pdf')
-set(gca,'xscale','lin')
-
 %take out zero values
 for k = length(r):-1:1 % bc columns being deleted as loop runs need to go from end to beginning so indexes not changed
         if r(k) <= 0
@@ -52,15 +40,37 @@ for k = length(r):-1:1 % bc columns being deleted as loop runs need to go from e
         end
 end
 
+
+logr = log(r);
+maxlogr = max(logr);
+minlogr = min(logr);
+maxval = max(r);
+upperlim = log10(maxval);
+xlin = linspace(minlogr,maxlogr,50);
+xlog = logspace(-5,upperlim,50);
+
+% log of data on linear scale
+figure
+histogram(logr,xlin,'Normalization','pdf')
+hold on
+
+%fit distribution on lin scale
+pd = fitdist(logr.','Normal');
+x_values = minlogr:0.01:maxlogr;
+y_values = pdf(pd,x_values);
+plot(x_values,y_values);
+set(gca,'xscale','lin')
+hold off
+
 % data on log scale
 figure
 h = histogram(r,xlog,'Normalization','pdf');
 set(gca,'xscale','log')
 hold on
 
-%fit distribution
+%fit distribution on log scale
 pd = fitdist(r.','lognormal');
-x_values = 0.001:0.01:maxval;
+x_values = 0.00001:0.0001:maxval;
 y_values = pdf(pd,x_values);
 plot(x_values,y_values);
 

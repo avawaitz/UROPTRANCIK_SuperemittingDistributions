@@ -1,5 +1,5 @@
-% Downloads source tags and emissions from excel file
-function datamatrix = downloaddata
+% Downloads source tags and emissions from excel file from brandt 2016
+function datamatrix = downloadbrandtdata
 [~,source,~]= xlsread('/Users/avawaitz/Dropbox/AvaProject/Data/es6b04303_si_002.xlsx','Compilation for export','D2:D26656');
 [~,subsource,~]= xlsread('/Users/avawaitz/Dropbox/AvaProject/Data/es6b04303_si_002.xlsx','Compilation for export','E2:E26656');
 [~,subsubsource,~]= xlsread('/Users/avawaitz/Dropbox/AvaProject/Data/es6b04303_si_002.xlsx','Compilation for export','F2:F26656');

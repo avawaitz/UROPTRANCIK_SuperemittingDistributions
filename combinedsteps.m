@@ -7,7 +7,7 @@
 % - check that there are 279 (93*3)
 
 
-% For sourcetag distributions
+%% For sourcetag distributions
 datamtrix = downloaddata; %OR
 %load('brandtdata','datamatrix');
 sourceemissions = dataprepare(datamatrix);
@@ -22,10 +22,10 @@ for p = 1:length(sourceemissions)
     plotdata(sourcetag,catvalues, 'none','none','all','SourcetagGraphs')
 end
 
-%For device category distributions
-datamatrix = downloaddata; 
+%% For device category distributions
+datamatrix = downloadbrandtdata; 
 %load('brandtdata','datamatrix');
-devicearr = devicecat;
+devicearr = devicecat(datamatrix);
 devicearr = cell2mat(devicearr); %% OR
 %load('brandtdata','devicearr');
 for p = 1: length(devicearr)
@@ -36,7 +36,7 @@ for p = 1: length(devicearr)
     plotdata(category,catvalues,'none','none','all','DevicecatGraphs')
 end
 
-%for Analyze Boston
+%% for Analyze Boston
 datamatrixAB = downloadAB;
 %OR load('ABdata','datamatrixAB');
 [siteeui,outliers,xuplim,yuplim] = dataprepareAB(datamatrixAB,xuplimspec);

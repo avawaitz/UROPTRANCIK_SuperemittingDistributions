@@ -51,7 +51,8 @@ if strcmpi('lin',scale) || strcmpi('all',scale)%Plots Linear % Have to use strcm
 
     hold off
 end
-%%%%Lin/Log 
+
+%%%%Lin/Log
 if strcmpi('linlog',scale) || strcmpi('all',scale) %Plots Log-Linear
     %taking out zero values
     for k = length(catvalues):-1:1 % bc columns being deleted as loop runs need to go from end to beginning so indexes not changed
