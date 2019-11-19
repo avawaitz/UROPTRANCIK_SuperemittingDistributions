@@ -6,6 +6,9 @@ uniqPlants = unique([assocStruct.PLANT_CODE]);
 result = struct('PLANT_CODE',{},'assocs',{});
 result(length(uniqPlants)).PLANT_CODE = [];
 
+% need to deal with the fact that the plants reporting boilers and
+% generators is different, also different from associations
+
 for j=1:length(uniqPlants)
 plantCodeKeys = find([assocStruct.PLANT_CODE] ==uniqPlants(j));
 boilerList = [assocStruct(plantCodeKeys).BOILER_ID];
