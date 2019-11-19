@@ -1,24 +1,23 @@
 % calcHeatRates
-% cacluates monthly heat rates for each BG group in each plant then
-% averages to find average heat rates for each BG group in each plant,
-% returning just a total list of heat rates
-% ** If we are converting to CO2 emissions need to maintain the fuel code
-% of the dominant fuel source in the yearDataStruct
-function annualAvgHeatRates1 = calcHeatRates(yearDataStruct)
-monthNames = fieldnames([yearDataStruct.Heat]);
-annualAvgHeatRates = zeros(1,length(yearDataStruct));
+% calculates monthly emission rates (emissions per energgy output) for each BG group in each plant then
+% averages to find average emission rates for each BG group in each plant,
+% returning a struct: PLANT_CODE BOILER_ID GENERATOR_ID NAMEPLATE_RATING emission rate
+
+function emissionRateStruct = calcHeatRates(yearDataStruct)
+monthNames = fieldnames([yearDataStruct.Emission]);
+monthNamesGen = fieldnames([yearDataStruct.Generation]);
+emissionRateStruct = rmfield(yearDataStruct,{'Emission','Generation'});
 for i=1:length(yearDataStruct)
-    monthlyHeatRates = zeros(1,12);
+    monthlyEmissionRates = zeros(1,12);
     for j= 1:12
-        monthHeat = yearDataStruct(i).Heat.(monthNames{j});
-        monthGen = yearDataStruct(i).Generation.(monthNames{j});
-        heatrate = monthHeat/monthGen;
-        monthlyHeatRates(j)=heatrate;
+        monthEmissions = yearDataStruct(i).Emission.(monthNames{j});
+        monthGen = yearDataStruct(i).Generation.(monthNamesGen{j});
+        emissionrate = monthEmissions/monthGen;
+        monthlyEmissionRates(j)=emissionrate;
     end
-    annualHeatRate = nanmean(nonzeros(monthlyHeatRates(~isinf(monthlyHeatRates))));
-    annualAvgHeatRates(i)=annualHeatRate;
+    annualEmissionRate = nanmean(nonzeros(monthlyEmissionRates(~isinf(monthlyEmissionRates))));
+    emissionRateStruct(i).EMISSION_RATE=annualEmissionRate;
 end
-annualAvgHeatRates1=annualAvgHeatRates(~isnan(annualAvgHeatRates));
 end
 
         
