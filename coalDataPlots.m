@@ -15,7 +15,7 @@ sigma = sqrt(log((lognormalStd^2/lognormalMean^2)+1));
 range_normal = max(normalizedDataVals)-min(normalizedDataVals);
 
 %Making pdfs
-xValsLognormal = (min(datavalues):0.1:max(datavalues));
+xValsLognormal = (min(datavalues):0.1:max(datavalues)); % step size may need to be adjusted
 logNormalpdf = lognpdf(xValsLognormal,mu,sigma);
 xValsNorm = (mu - 3*sigma:0.1:mu + 3*sigma);
 normal_pdf = normpdf(xValsNorm,mu,sigma);
