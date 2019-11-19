@@ -23,7 +23,7 @@ allfieldsBoiler = fieldnames(boilerStruct);
 monthContentfieldsBoiler = allfieldsBoiler(19:30); 
 monthQuantfieldsBoiler=allfieldsBoiler(6:17);
 allfieldsGen = fieldnames(generatorStruct);
-monthfieldsGen = allfieldsGen(8:19); 
+monthfieldsGen = allfieldsGen(8:20); 
 monthNames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];%field names of monnth heat data is boile Struct
 excluded = [];
 
@@ -52,7 +52,7 @@ for w=1:12
     
     % make NaN <=0 or missing GENERATION data (without deleting corresponding place 
     %in heating)
-    generationVec = [generatorStruct.(monthfieldsGen{w})];
+    generationVec =[generatorStruct.(monthfieldsGen{w})];
     generationVec(generationVec<=0)=NaN;
     
     %put back into struct
@@ -139,6 +139,7 @@ if groupOrPlant == 'g'
                 newStruct(finalStructIdx).BOILER_ID = assocStruct(j).assocs(p).Boils;
                 newStruct(finalStructIdx).GENERATOR_ID = assocStruct(j).assocs(p).Gens;
             % loop through month fields to add
+                annualGen = 0;
                 for i = 1:12
                     boilerStructMonthVec = [boilerStruct.(monthNames{i})];
                     generatorStructMonthVec = [generatorStruct.(monthfieldsGen{i})];
@@ -146,7 +147,10 @@ if groupOrPlant == 'g'
                     totalMonthGen = nansum(generatorStructMonthVec(generatorIdxs==1));
                     newStruct(finalStructIdx).Emission.(monthNames{i})= totalMonthEmission;
                     newStruct(finalStructIdx).Generation.(monthfieldsGen{i})=totalMonthGen;
+                    annualGen = annualGen+totalMonthGen;
                 end
+                newStruct(finalStructIdx).Generation.(monthfieldsGen{13})=annualGen; %filling in TOTAL generation
+                
                 finalStructIdx = finalStructIdx+1;
                 disp(finalStructIdx)
             else
@@ -182,12 +186,15 @@ if groupOrPlant == 'p'
             newStruct(finalStructIdx).GENERATOR_ID = [generatorStruct(actualGenIdx).GENERATOR_ID];
             newStruct(finalStructIdx).NAMEPLATE_RATING = [generatorStruct(actualGenIdx).NAMEPLATE_RATING];
     % loop through month fields to add
+            annualGen = 0;
             for i = 1:12
-            totalMonthEmission = nansum([boilerStruct(actualIdx).(monthNames{i})]);
-            totalMonthGen =nansum([generatorStruct(actualGenIdx).(monthfieldsGen{i})]);
-            newStruct(finalStructIdx).Emission.(monthNames{i})= totalMonthEmission;
-            newStruct(finalStructIdx).Generation.(monthfieldsGen{i})=totalMonthGen;
+                totalMonthEmission = nansum([boilerStruct(actualIdx).(monthNames{i})]);
+                totalMonthGen =nansum([generatorStruct(actualGenIdx).(monthfieldsGen{i})]);
+                newStruct(finalStructIdx).Emission.(monthNames{i})= totalMonthEmission;
+                newStruct(finalStructIdx).Generation.(monthfieldsGen{i})=totalMonthGen;
+                annualGen = annualGen+totalMonthGen;
             end
+            newStruct(finalStructIdx).Generation.(monthfieldsGen{13})=annualGen;
             finalStructIdx = finalStructIdx+1;
             disp(finalStructIdx)
         else

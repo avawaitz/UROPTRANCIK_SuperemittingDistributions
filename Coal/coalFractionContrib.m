@@ -2,13 +2,14 @@
 % right now I will have it call the calcHeatRates function...if this takes
 % too long maybe later make it so you can also put in the result oif the
 % calcHeatRates fn
-function [fractionPlants,fractionCapacity] =coalFractionContrib(yearDataStruct,fraction)
+function [fractionPlants,fractionNameCapacity,fractionGeneration] =coalFractionContrib(yearDataStruct,fraction)
 %{
 1) x% of plants contribute 50% of emissions: 
 Sort by emission intensity, convert to just emissions per year, then find fraction
 %}
 emissionRatesStruct = calcHeatRates(yearDataStruct);
 emissionRates = [emissionRatesStruct.EMISSION_RATE];
+generationStruct = [yearDataStruct.Generation];
 
 %find total annual emissions
 monthNames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
@@ -46,18 +47,34 @@ end
 %Sum them up **ADDING the CAPACITIES** (whatever fractionCap is when the loop breaks is the number
 %we want to know
 
-totCapacity = sum([yearDataStruct.NAMEPLATE_RATING]);
-sortedCapacityStruct = yearDataStruct(sortOrder); %yearDataStruct sorted by emissionRates
-
-%**NOTE: THOSE WITH BOILERS BUT NO ASSOCIATED GENERATORS HAVE HIGHEST
-%EMISSIO INEFFICIENCY SO COUNTED FIRST BUT ALSO NO LISTED NAMEPLATE
-%CAPACITY --> WHAT TO DO ABOUT THESE? WHAT ARE THEY??
+totNCapacity = sum([yearDataStruct.NAMEPLATE_RATING]);
+sortedNCapacityStruct = yearDataStruct(sortOrder); %yearDataStruct sorted by emissionRates
 
 for l=1:totNumElems
     elemSum2 = sum(sortedAnnualEmiss(1:l));
-    sumCapacity = sum([sortedCapacityStruct(1:l).NAMEPLATE_RATING]);
-    fractionCapacity = sumCapacity/totCapacity;
+    sumNCapacity = sum([sortedNCapacityStruct(1:l).NAMEPLATE_RATING]);
+    fractionNameCapacity = sumNCapacity/totNCapacity;
     if elemSum2 > totEmissions*fraction
+        break
+    end
+end
+
+%{
+3) x% of total annual generated electricity, contribute 50% of emissions:
+ Sort by emission intensity, convert to just emissions per year, then find fraction 
+(summed generation/total generation)
+%}
+
+sortedGenerationStruct = generationStruct(sortOrder);
+totGeneration = sum([sortedGenerationStruct(:).TOTAL_GENERATION]);
+
+for m=1:totNumElems
+    disp(m)
+    elemSum3 = sum(sortedAnnualEmiss(1:m));
+    sumGeneration = sum([sortedGenerationStruct(1:m).TOTAL_GENERATION]);
+    fractionGeneration = sumGeneration/totGeneration;
+    disp(sumGeneration)
+    if elemSum3 > totEmissions*fraction
         break
     end
 end
