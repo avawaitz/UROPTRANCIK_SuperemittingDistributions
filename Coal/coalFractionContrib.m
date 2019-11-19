@@ -2,7 +2,7 @@
 % right now I will have it call the calcHeatRates function...if this takes
 % too long maybe later make it so you can also put in the result oif the
 % calcHeatRates fn
-function [sortedCapacityStruct,fractionCapacity] =coalFractionContrib(yearDataStruct,fraction)
+function [fractionPlants,fractionCapacity] =coalFractionContrib(yearDataStruct,fraction)
 %{
 1) x% of plants contribute 50% of emissions: 
 Sort by emission intensity, convert to just emissions per year, then find fraction

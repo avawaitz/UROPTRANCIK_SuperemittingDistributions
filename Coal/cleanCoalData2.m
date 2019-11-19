@@ -18,7 +18,7 @@ Following the steps used by Linn et al 2014 the data will be modified in
  %}
 
 function [newStruct,excludedCounts,NumberNoCoal] = cleanCoalData2(generatorStruct,boilerStruct,unitStruct,assocStruct,groupOrPlant)
-uniqPlants = unique([boilerStruct.PLANT_CODE]); 
+uniqPlants = unique([assocStruct.PLANT_CODE]); 
 allfieldsBoiler = fieldnames(boilerStruct);
 monthContentfieldsBoiler = allfieldsBoiler(19:30); 
 monthQuantfieldsBoiler=allfieldsBoiler(6:17);

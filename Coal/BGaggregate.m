@@ -1,13 +1,23 @@
 %BGaggregate.m
 % Testing find and calculate boiler and gen aggregates
-function result = BGaggregate(assocStruct)
-uniqPlants = unique([assocStruct.PLANT_CODE]); 
+function result = BGaggregate(assocStruct,boilerStruct,generatorStruct)
+
+% need to deal with the fact that the plants reporting boilers and
+% generators is different, also different from associations. I will do it
+% here by eliminating from the uniqueplants list any plants that are not
+% also in the boiler and generator sets...
+%Can also write in so that the function returns the plants that are not
+%shared between the three datasets...
+
+uniqPlantsAss = unique([assocStruct.PLANT_CODE]); 
+uniqPlantsBoil = unique([boilerStruct.PLANT_CODE]); 
+uniqPlantsGen = unique([generatorStruct.PLANT_CODE]); 
+
+uniqPlants = intersect(intersect(uniqPlantsAss,uniqPlantsBoil,'stable'),uniqPlantsGen,'stable');
+
 % attempting to pre-allocate result struct for speed:
 result = struct('PLANT_CODE',{},'assocs',{});
 result(length(uniqPlants)).PLANT_CODE = [];
-
-% need to deal with the fact that the plants reporting boilers and
-% generators is different, also different from associations
 
 for j=1:length(uniqPlants)
 plantCodeKeys = find([assocStruct.PLANT_CODE] ==uniqPlants(j));
@@ -73,6 +83,7 @@ end
 % number of plants with both
 % average number of boilers in a group
 % average number of generators in a group
+
 end 
  
  

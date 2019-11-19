@@ -1,6 +1,8 @@
 % coalDataPlots
 function coalDataPlots(Title,datavalues,numberBinsLin,numberBinsLog,fracContrib) 
 
+datavalues = datavalues(~isnan(datavalues));
+
 % Convert lognormal values to normal
 normalizedDataVals = log(datavalues);
 
