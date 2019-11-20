@@ -8,25 +8,30 @@ end
 
 %If certain gases specified just do it for those.
 
+
 % Make matrix of outputs for the different gas types
 Y = zeros(length(cleanedStruct),length(gasNames));
 for b = 1:length(gasNames)
-    Y(:,b) = [cleanedStruct.(gasNames{b})];
+    %Standardize variables...
+    row = [cleanedStruct.(gasNames{b})];
+    Y(:,b) = nanzscore(row);
 end
-% Make matrix of variables
-modelYear = [cleanedStruct.YEARN40].';
-speed = [cleanedStruct.SPEEDN51].';
-accel = [cleanedStruct.ACCELN63].';
-X = [modelYear speed accel];
+
+
+%Make matrix of variables
+modelYear = [cleanedStruct.YEARN40];
+speed = [cleanedStruct.SPEEDN51];
+accel = [cleanedStruct.ACCELN63];
+X = [nanzscore(modelYear).' nanzscore(speed).' nanzscore(accel).'];
 varNames = {'modelYear' 'speed' 'accel'};
 
-% Regression and table formatting
+%Regression and table formatting
 regressResult = mvregress(X,Y);
 regressionOutput = array2table(regressResult);
 regressionOutput.Properties.VariableNames = gasNames;
 regressionOutput.Properties.RowNames = varNames;
 
-writetable(regressionOutput,'/Users/avawaitz/Dropbox/AvaProject/Data/PersonalVehicles/Regressions/PersonalVehicleRegressions.xlsx','Sheet',DataSetName,'WriteVariableNames',true,'WriteRowNames',true)
+writetable(regressionOutput,'/Users/avawaitz/Dropbox/AvaProject/Data/PersonalVehicles/Regressions/PersonalVehicleRegressionsStandardized.xlsx','Sheet',DataSetName,'WriteVariableNames',true,'WriteRowNames',true)
 % returns table
-
+%}
 end
